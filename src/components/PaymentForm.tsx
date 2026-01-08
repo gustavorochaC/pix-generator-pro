@@ -170,35 +170,57 @@ export function PaymentForm({ onGenerate }: PaymentFormProps) {
                 value={pixKey}
                 onChange={(e) => setPixKey(e.target.value)}
                 className={cn(
-                  "h-11 pr-24",
+                  "h-11 min-h-[44px] pr-3 sm:pr-24",
                   pixKey && (isKeyValid ? "border-primary/50" : "border-destructive/50")
                 )}
               />
               {pixKey && (
-                <div className={cn(
-                  "absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium",
-                  isKeyValid 
-                    ? "bg-primary/10 text-primary" 
-                    : "bg-destructive/10 text-destructive"
-                )}>
-                  {isKeyValid ? (
-                    <>
-                      <CheckCircle2 className="h-3 w-3" />
-                      {getKeyTypeLabel(keyType)}
-                    </>
-                  ) : (
-                    <>
-                      <AlertCircle className="h-3 w-3" />
-                      Inválido
-                    </>
-                  )}
-                </div>
+                <>
+                  {/* Badge visível apenas em desktop (dentro do input) */}
+                  <div className={cn(
+                    "hidden sm:flex absolute right-2 top-1/2 -translate-y-1/2 items-center gap-1 px-2 py-0.5 rounded text-xs font-medium z-10",
+                    isKeyValid 
+                      ? "bg-primary/10 text-primary" 
+                      : "bg-destructive/10 text-destructive"
+                  )}>
+                    {isKeyValid ? (
+                      <>
+                        <CheckCircle2 className="h-3 w-3" />
+                        {getKeyTypeLabel(keyType)}
+                      </>
+                    ) : (
+                      <>
+                        <AlertCircle className="h-3 w-3" />
+                        Inválido
+                      </>
+                    )}
+                  </div>
+                  {/* Badge visível apenas em mobile (abaixo do input) */}
+                  <div className={cn(
+                    "flex sm:hidden items-center gap-1 px-2 py-1 rounded text-xs font-medium mt-1",
+                    isKeyValid 
+                      ? "bg-primary/10 text-primary" 
+                      : "bg-destructive/10 text-destructive"
+                  )}>
+                    {isKeyValid ? (
+                      <>
+                        <CheckCircle2 className="h-3 w-3" />
+                        {getKeyTypeLabel(keyType)}
+                      </>
+                    ) : (
+                      <>
+                        <AlertCircle className="h-3 w-3" />
+                        Inválido
+                      </>
+                    )}
+                  </div>
+                </>
               )}
             </div>
           </div>
 
           {/* Merchant Info Grid */}
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 gap-4 sm:gap-4">
             <div className="space-y-2">
               <Label htmlFor="merchantName" className="text-sm font-medium flex items-center gap-2">
                 <User className="h-4 w-4" />
@@ -211,7 +233,7 @@ export function PaymentForm({ onGenerate }: PaymentFormProps) {
                 value={merchantName}
                 onChange={handleMerchantNameChange}
                 maxLength={25}
-                className="h-11"
+                className="h-11 min-h-[44px]"
               />
               <p className="text-xs text-muted-foreground text-right">
                 {merchantName.length}/25
@@ -230,7 +252,7 @@ export function PaymentForm({ onGenerate }: PaymentFormProps) {
                 value={merchantCity}
                 onChange={handleMerchantCityChange}
                 maxLength={15}
-                className="h-11"
+                className="h-11 min-h-[44px]"
               />
               <p className="text-xs text-muted-foreground text-right">
                 {merchantCity.length}/15
@@ -250,7 +272,7 @@ export function PaymentForm({ onGenerate }: PaymentFormProps) {
               placeholder="R$ 0,00"
               value={amount}
               onChange={handleAmountChange}
-              className="text-lg font-mono h-12"
+              className="text-base sm:text-lg font-mono h-12 min-h-[44px]"
             />
           </div>
 
@@ -276,7 +298,7 @@ export function PaymentForm({ onGenerate }: PaymentFormProps) {
               Validade do QR Code
             </Label>
             <Select value={expirationPreset} onValueChange={setExpirationPreset}>
-              <SelectTrigger className="h-11">
+              <SelectTrigger className="h-11 min-h-[44px]">
                 <SelectValue placeholder="Selecione a validade" />
               </SelectTrigger>
               <SelectContent>
@@ -298,7 +320,7 @@ export function PaymentForm({ onGenerate }: PaymentFormProps) {
                     <Button
                       variant="outline"
                       className={cn(
-                        "w-full justify-start text-left font-normal h-11",
+                        "w-full justify-start text-left font-normal h-11 min-h-[44px]",
                         !customDate && "text-muted-foreground"
                       )}
                     >
@@ -329,7 +351,7 @@ export function PaymentForm({ onGenerate }: PaymentFormProps) {
                   type="time"
                   value={customTime}
                   onChange={(e) => setCustomTime(e.target.value)}
-                  className="h-11"
+                  className="h-11 min-h-[44px]"
                 />
               </div>
             </div>
@@ -338,10 +360,10 @@ export function PaymentForm({ onGenerate }: PaymentFormProps) {
           <Button 
             type="submit" 
             size="lg" 
-            className="w-full h-12 text-base font-semibold"
+            className="w-full min-h-[44px] h-11 sm:h-12 text-sm sm:text-base font-semibold"
             disabled={!pixKey || !isKeyValid || !merchantName}
           >
-            <QrCode className="mr-2 h-5 w-5" />
+            <QrCode className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
             Gerar QR Code Pix
           </Button>
         </form>

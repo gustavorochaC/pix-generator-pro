@@ -17,6 +17,24 @@ export function QRCodeDisplay({ data, onExpired, onReset }: QRCodeDisplayProps) 
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [isExpired, setIsExpired] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [qrCodeSize, setQrCodeSize] = useState(160);
+  
+  // Responsive QR Code size: 160px mobile, 180px tablet, 200px desktop
+  useEffect(() => {
+    const updateSize = () => {
+      if (window.innerWidth < 640) {
+        setQrCodeSize(160); // Mobile
+      } else if (window.innerWidth < 1024) {
+        setQrCodeSize(180); // Tablet
+      } else {
+        setQrCodeSize(200); // Desktop
+      }
+    };
+    
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
 
   // Generate valid Pix BRCode payload
   const pixCode = useMemo(() => {
@@ -98,18 +116,18 @@ export function QRCodeDisplay({ data, onExpired, onReset }: QRCodeDisplayProps) 
     <Card className={`shadow-lg border-2 transition-all duration-300 ${isExpired ? "border-destructive/50 bg-destructive/5" : ""}`}>
       <CardHeader className="text-center space-y-2 pb-4">
         <CardTitle className="text-xl">Pagamento Pix</CardTitle>
-        <div className="text-3xl font-bold text-primary font-mono">
+        <div className="text-2xl sm:text-3xl font-bold text-primary font-mono">
           {formatCurrency(data.amount)}
         </div>
         
         {/* Recipient Info */}
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs sm:text-sm text-muted-foreground px-2">
           <span className="flex items-center gap-1">
-            <User className="h-3.5 w-3.5" />
+            <User className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
             {data.merchantName}
           </span>
           <span className="flex items-center gap-1">
-            <MapPin className="h-3.5 w-3.5" />
+            <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
             {data.merchantCity}
           </span>
         </div>
@@ -125,12 +143,12 @@ export function QRCodeDisplay({ data, onExpired, onReset }: QRCodeDisplayProps) 
           <p className="text-sm text-muted-foreground mt-2">{data.description}</p>
         )}
       </CardHeader>
-      <CardContent className="space-y-5">
+      <CardContent className="space-y-4 sm:space-y-5">
         <div className="relative flex justify-center">
-          <div className={`p-4 bg-card rounded-xl border-2 ${isExpired ? "opacity-30" : ""}`}>
+          <div className={`p-2 sm:p-4 bg-card rounded-xl border-2 ${isExpired ? "opacity-30" : ""}`}>
             <QRCodeSVG
               value={pixCode}
-              size={200}
+              size={qrCodeSize}
               level="M"
               includeMargin
               bgColor="transparent"
@@ -149,8 +167,8 @@ export function QRCodeDisplay({ data, onExpired, onReset }: QRCodeDisplayProps) 
           )}
         </div>
 
-        <div className={`flex items-center justify-center gap-2 text-lg font-mono ${getTimerColor()}`}>
-          <Clock className="h-5 w-5" />
+        <div className={`flex items-center justify-center gap-2 text-base sm:text-lg font-mono ${getTimerColor()}`}>
+          <Clock className="h-4 w-4 sm:h-5 sm:w-5" />
           <span>
             {isExpired ? "Expirado" : `Expira em: ${formatTime(timeLeft)}`}
           </span>
@@ -158,11 +176,11 @@ export function QRCodeDisplay({ data, onExpired, onReset }: QRCodeDisplayProps) 
 
         {/* Pix Copia e Cola */}
         <div className="space-y-2">
-          <Label className="text-sm font-medium text-muted-foreground">
+          <Label className="text-xs sm:text-sm font-medium text-muted-foreground">
             Pix Copia e Cola
           </Label>
           <div className="relative">
-            <div className="p-3 bg-secondary/50 rounded-lg border font-mono text-xs break-all max-h-20 overflow-y-auto">
+            <div className="p-2.5 sm:p-3 bg-secondary/50 rounded-lg border font-mono text-[10px] sm:text-xs break-all max-h-20 overflow-y-auto leading-relaxed">
               {pixCode}
             </div>
           </div>
@@ -173,16 +191,16 @@ export function QRCodeDisplay({ data, onExpired, onReset }: QRCodeDisplayProps) 
             onClick={handleCopy}
             disabled={isExpired}
             size="lg"
-            className="w-full h-12 text-base font-semibold"
+            className="w-full min-h-[44px] h-11 sm:h-12 text-sm sm:text-base font-semibold"
           >
             {copied ? (
               <>
-                <Check className="mr-2 h-5 w-5" />
+                <Check className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                 Copiado!
               </>
             ) : (
               <>
-                <Copy className="mr-2 h-5 w-5" />
+                <Copy className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                 Copiar Código Pix
               </>
             )}
@@ -192,9 +210,9 @@ export function QRCodeDisplay({ data, onExpired, onReset }: QRCodeDisplayProps) 
             onClick={onReset}
             variant="outline"
             size="lg"
-            className="w-full h-12 text-base"
+            className="w-full min-h-[44px] h-11 sm:h-12 text-sm sm:text-base"
           >
-            <RefreshCw className="mr-2 h-5 w-5" />
+            <RefreshCw className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
             Gerar Novo Código
           </Button>
         </div>
