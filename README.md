@@ -1,8 +1,8 @@
-# Gerador de Pix
+<img width="1348" height="905" alt="pix" src="https://github.com/user-attachments/assets/e2433779-164c-40a5-84b9-b5cac68c1840" /># Gerador de Pix
 
 Gerador de códigos Pix e QR Codes de pagamento instantâneo. Crie cobranças com validade personalizada e compartilhe facilmente.
 
-![Uploading pix.png…]()
+<img width="1348" height="905" alt="pix" src="https://github.com/user-attachments/assets/adf7c1a7-968d-4f54-bbd9-f2b18b6da094" />
 
 
 ## Características
@@ -34,7 +34,7 @@ Gerador de códigos Pix e QR Codes de pagamento instantâneo. Crie cobranças co
 
 ```bash
 # 1. Clone o repositório
-git clone [Gerador de Pix](https://gustavorochac.github.io/pix-generator-pro/)
+git clone https://gustavorochac.github.io/pix-generator-pro/
 
 # 2. Entre no diretório do projeto
 cd pix-generator-pro
