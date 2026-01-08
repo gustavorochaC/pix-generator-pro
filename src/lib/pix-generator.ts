@@ -43,6 +43,10 @@ const CRC16_TABLE = [
  * Calculate CRC16-CCITT checksum
  */
 export function calculateCRC16(payload: string): string {
+  // #region agent log
+  fetch('http://127.0.0.1:7245/ingest/0a1ba152-998c-490b-9ad2-83cf911cb85a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'pix-generator.ts:45',message:'calculateCRC16 entry',data:{payloadLength:payload.length,payloadEnd:payload.slice(-10)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+  // #endregion
+  
   let crc = 0xffff;
   
   for (let i = 0; i < payload.length; i++) {
@@ -51,7 +55,13 @@ export function calculateCRC16(payload: string): string {
     crc = ((crc << 8) ^ CRC16_TABLE[j]) & 0xffff;
   }
   
-  return crc.toString(16).toUpperCase().padStart(4, "0");
+  const result = crc.toString(16).toUpperCase().padStart(4, "0");
+  
+  // #region agent log
+  fetch('http://127.0.0.1:7245/ingest/0a1ba152-998c-490b-9ad2-83cf911cb85a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'pix-generator.ts:55',message:'calculateCRC16 exit',data:{crcValue:crc,crcHex:result},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+  // #endregion
+  
+  return result;
 }
 
 /**
@@ -59,7 +69,13 @@ export function calculateCRC16(payload: string): string {
  */
 function formatTLV(id: string, value: string): string {
   const length = value.length.toString().padStart(2, "0");
-  return `${id}${length}${value}`;
+  const tlv = `${id}${length}${value}`;
+  
+  // #region agent log
+  fetch('http://127.0.0.1:7245/ingest/0a1ba152-998c-490b-9ad2-83cf911cb85a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'pix-generator.ts:60',message:'TLV formatted',data:{id,valueLength:value.length,length,actualValueLength:value.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+  // #endregion
+  
+  return tlv;
 }
 
 /**
@@ -162,8 +178,16 @@ export interface PixPayload {
  * Generate Static Pix BRCode payload
  */
 export function generatePixPayload(data: PixPayload): string {
+  // #region agent log
+  fetch('http://127.0.0.1:7245/ingest/0a1ba152-998c-490b-9ad2-83cf911cb85a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'pix-generator.ts:164',message:'generatePixPayload entry',data:{pixKey:data.pixKey,merchantName:data.merchantName,amount:data.amount},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+  // #endregion
+  
   const keyType = detectPixKeyType(data.pixKey);
   const formattedKey = formatPixKey(data.pixKey, keyType);
+  
+  // #region agent log
+  fetch('http://127.0.0.1:7245/ingest/0a1ba152-998c-490b-9ad2-83cf911cb85a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'pix-generator.ts:167',message:'Key formatted',data:{keyType,formattedKey},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+  // #endregion
   
   // ID 00 - Payload Format Indicator
   const id00 = formatTLV("00", "01");
@@ -174,12 +198,21 @@ export function generatePixPayload(data: PixPayload): string {
   
   // Optional description in merchant account
   let merchantAccountContent = gui + pixKey;
+  // #region agent log
+  fetch('http://127.0.0.1:7245/ingest/0a1ba152-998c-490b-9ad2-83cf911cb85a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'pix-generator.ts:199',message:'Before description check',data:{hasDescription:!!data.description,descriptionValue:data.description,merchantAccountContentLength:merchantAccountContent.length},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'D'})}).catch(()=>{});
+  // #endregion
   if (data.description) {
     const desc = normalizeText(data.description, 72);
+    // #region agent log
+    fetch('http://127.0.0.1:7245/ingest/0a1ba152-998c-490b-9ad2-83cf911cb85a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'pix-generator.ts:202',message:'Description normalized',data:{original:data.description,normalized:desc,descLength:desc.length},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'D'})}).catch(()=>{});
+    // #endregion
     if (desc) {
       merchantAccountContent += formatTLV("02", desc);
     }
   }
+  // #region agent log
+  fetch('http://127.0.0.1:7245/ingest/0a1ba152-998c-490b-9ad2-83cf911cb85a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'pix-generator.ts:207',message:'Merchant account content final',data:{merchantAccountContent,merchantAccountContentLength:merchantAccountContent.length},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'D'})}).catch(()=>{});
+  // #endregion
   const id26 = formatTLV("26", merchantAccountContent);
   
   // ID 52 - Merchant Category Code
@@ -214,14 +247,37 @@ export function generatePixPayload(data: PixPayload): string {
   // Build payload without CRC
   const payloadWithoutCRC = id00 + id26 + id52 + id53 + id54 + id58 + id59 + id60 + id62;
   
+  // #region agent log
+  fetch('http://127.0.0.1:7245/ingest/0a1ba152-998c-490b-9ad2-83cf911cb85a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'pix-generator.ts:215',message:'Payload without CRC',data:{payloadWithoutCRC,length:payloadWithoutCRC.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+  // #endregion
+  
   // ID 63 - CRC16 (placeholder with 4 chars for CRC calculation)
   const payloadForCRC = payloadWithoutCRC + "6304";
+  
+  // #region agent log
+  fetch('http://127.0.0.1:7245/ingest/0a1ba152-998c-490b-9ad2-83cf911cb85a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'pix-generator.ts:218',message:'Payload for CRC calculation',data:{payloadForCRC,length:payloadForCRC.length},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'B'})}).catch(()=>{});
+  // #endregion
   
   // Calculate CRC16
   const crc = calculateCRC16(payloadForCRC);
   
-  // Final payload with CRC
-  return payloadForCRC.slice(0, -4) + "04" + crc;
+  // #region agent log
+  fetch('http://127.0.0.1:7245/ingest/0a1ba152-998c-490b-9ad2-83cf911cb85a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'pix-generator.ts:221',message:'CRC calculated',data:{crc},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'B'})}).catch(()=>{});
+  // #endregion
+  
+  // Final payload with CRC - ID 63 (CRC16) format: "63" + "04" (length) + CRC (4 chars)
+  const finalPayload = payloadWithoutCRC + "6304" + crc;
+  
+  // Validate CRC: recalculate on final payload (without the CRC value) to verify
+  const payloadForValidation = payloadWithoutCRC + "6304";
+  const recalculatedCRC = calculateCRC16(payloadForValidation);
+  const crcMatches = recalculatedCRC === crc;
+  
+  // #region agent log
+  fetch('http://127.0.0.1:7245/ingest/0a1ba152-998c-490b-9ad2-83cf911cb85a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'pix-generator.ts:261',message:'Final payload',data:{finalPayload,length:finalPayload.length,endsWithCRC:finalPayload.endsWith(crc),hasId63:finalPayload.includes('6304'),endsWithId63CRC:finalPayload.endsWith('04' + crc),finalSegment:finalPayload.slice(-8),crcMatches,recalculatedCRC,originalCRC:crc,payloadForValidation},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'A'})}).catch(()=>{});
+  // #endregion
+  
+  return finalPayload;
 }
 
 /**

@@ -1,73 +1,116 @@
-# Welcome to your Lovable project
+# Gerador de Pix
 
-## Project info
+Gerador de códigos Pix e QR Codes de pagamento instantâneo. Crie cobranças com validade personalizada e compartilhe facilmente.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Características
 
-## How can I edit this code?
+- Geração de QR Codes Pix estáticos seguindo o padrão EMV
+- Suporte a todos os tipos de chave Pix (CPF, CNPJ, e-mail, telefone, chave aleatória)
+- Cálculo automático de CRC16 para validação dos códigos
+- Interface moderna e responsiva
+- Validade configurável dos QR Codes
+- Código Pix Copia e Cola para pagamento manual
 
-There are several ways of editing your application.
+## Tecnologias Utilizadas
 
-**Use Lovable**
+- **Vite** - Build tool e dev server
+- **React 18** - Biblioteca para interfaces de usuário
+- **TypeScript** - Tipagem estática
+- **Tailwind CSS** - Framework CSS utilitário
+- **shadcn/ui** - Componentes de UI
+- **React Router** - Roteamento
+- **qrcode.react** - Geração de QR Codes
+- **date-fns** - Manipulação de datas
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Requisitos
 
-Changes made via Lovable will be committed automatically to this repo.
+- Node.js 18+ (recomendado usar [nvm](https://github.com/nvm-sh/nvm))
+- npm ou yarn
 
-**Use your preferred IDE**
+## Instalação
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+```bash
+# 1. Clone o repositório
+git clone <URL_DO_REPOSITORIO>
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+# 2. Entre no diretório do projeto
+cd pix-generator-pro
 
-Follow these steps:
+# 3. Instale as dependências
+npm install
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# 4. Inicie o servidor de desenvolvimento
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+O aplicativo estará disponível em `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Scripts Disponíveis
 
-**Use GitHub Codespaces**
+- `npm run dev` - Inicia o servidor de desenvolvimento
+- `npm run build` - Cria o build de produção
+- `npm run build:dev` - Cria o build de desenvolvimento
+- `npm run lint` - Executa o linter
+- `npm run preview` - Pré-visualiza o build de produção
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Estrutura do Projeto
 
-## What technologies are used for this project?
+```
+pix-generator-pro/
+├── src/
+│   ├── components/      # Componentes React
+│   │   ├── ui/         # Componentes de UI (shadcn/ui)
+│   │   ├── PaymentForm.tsx
+│   │   ├── QRCodeDisplay.tsx
+│   │   └── ...
+│   ├── lib/            # Utilitários e lógica de negócio
+│   │   └── pix-generator.ts  # Geração de payloads Pix
+│   ├── pages/          # Páginas da aplicação
+│   ├── hooks/          # React hooks customizados
+│   └── main.tsx        # Entry point
+├── public/             # Arquivos estáticos
+├── index.html          # HTML principal
+└── package.json        # Dependências do projeto
+```
 
-This project is built with:
+## Funcionalidades
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Geração de QR Code Pix
 
-## How can I deploy this project?
+1. Insira sua chave Pix (CPF, CNPJ, e-mail, telefone ou chave aleatória)
+2. Preencha o nome do beneficiário (até 25 caracteres)
+3. Informe a cidade do beneficiário (até 15 caracteres)
+4. Defina o valor do pagamento
+5. Opcionalmente, adicione uma descrição
+6. Configure a validade do QR Code
+7. Gere o código e compartilhe
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+### Validação
 
-## Can I connect a custom domain to my Lovable project?
+O sistema valida automaticamente:
+- Formato da chave Pix
+- Limites de caracteres dos campos
+- Cálculo de CRC16 para integridade do código
 
-Yes, you can!
+## Padrão EMV
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+O gerador segue o padrão EMV QR Code para códigos Pix estáticos, conforme especificação do Banco Central do Brasil, incluindo:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- Campos obrigatórios (ID 00, 26, 52, 53, 58, 59, 60, 62, 63)
+- Campo opcional de valor (ID 54)
+- Cálculo de CRC16-CCITT (0xFFFF)
+- Formato TLV (Tag-Length-Value)
+
+## Desenvolvimento
+
+Para contribuir com o projeto:
+
+1. Faça um fork do repositório
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
+3. Commit suas mudanças (`git commit -am 'Adiciona nova feature'`)
+4. Push para a branch (`git push origin feature/nova-feature`)
+5. Abra um Pull Request
+
+## Licença
+
+Este projeto é de código aberto e está disponível sob a licença MIT.
