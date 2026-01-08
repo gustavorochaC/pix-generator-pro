@@ -2,6 +2,9 @@
 
 Gerador de códigos Pix e QR Codes de pagamento instantâneo. Crie cobranças com validade personalizada e compartilhe facilmente.
 
+![Uploading pix.png…]()
+
+
 ## Características
 
 - Geração de QR Codes Pix estáticos seguindo o padrão EMV
@@ -31,7 +34,7 @@ Gerador de códigos Pix e QR Codes de pagamento instantâneo. Crie cobranças co
 
 ```bash
 # 1. Clone o repositório
-git clone <URL_DO_REPOSITORIO>
+git clone [Gerador de Pix](https://gustavorochac.github.io/pix-generator-pro/)
 
 # 2. Entre no diretório do projeto
 cd pix-generator-pro
