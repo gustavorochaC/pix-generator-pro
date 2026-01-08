@@ -1,20 +1,14 @@
 import { useState, useCallback } from "react";
 import { Header } from "@/components/Header";
-import { PaymentForm } from "@/components/PaymentForm";
+import { PaymentForm, type PaymentFormData } from "@/components/PaymentForm";
 import { QRCodeDisplay } from "@/components/QRCodeDisplay";
 import { EmptyState } from "@/components/EmptyState";
 
-interface PaymentData {
-  amount: number;
-  description: string;
-  expiresAt: Date;
-}
-
 const Index = () => {
-  const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
+  const [paymentData, setPaymentData] = useState<PaymentFormData | null>(null);
   const [isExpired, setIsExpired] = useState(false);
 
-  const handleGenerate = useCallback((data: PaymentData) => {
+  const handleGenerate = useCallback((data: PaymentFormData) => {
     setPaymentData(data);
     setIsExpired(false);
   }, []);
@@ -39,7 +33,7 @@ const Index = () => {
               Gere seu código Pix em segundos
             </h2>
             <p className="text-muted-foreground">
-              Crie QR Codes de pagamento personalizados de forma rápida e segura
+              Crie QR Codes de pagamento válidos com checksum CRC16
             </p>
           </div>
 
@@ -51,9 +45,7 @@ const Index = () => {
             <div>
               {paymentData ? (
                 <QRCodeDisplay
-                  amount={paymentData.amount}
-                  description={paymentData.description}
-                  expiresAt={paymentData.expiresAt}
+                  data={paymentData}
                   onExpired={handleExpired}
                   onReset={handleReset}
                 />
@@ -68,7 +60,7 @@ const Index = () => {
       <footer className="border-t py-6">
         <div className="container mx-auto px-4">
           <p className="text-center text-sm text-muted-foreground">
-            Gerador de códigos Pix para fins demonstrativos. Não processa pagamentos reais.
+            Gerador de códigos Pix compatível com o padrão EMV QR Code. Use apenas com suas próprias chaves Pix.
           </p>
         </div>
       </footer>
