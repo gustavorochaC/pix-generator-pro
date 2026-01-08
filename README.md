@@ -1,4 +1,3 @@
-<img width="1348" height="905" alt="pix" src="https://github.com/user-attachments/assets/e2433779-164c-40a5-84b9-b5cac68c1840" /># Gerador de Pix
 
 Gerador de códigos Pix e QR Codes de pagamento instantâneo. Crie cobranças com validade personalizada e compartilhe facilmente.
 
